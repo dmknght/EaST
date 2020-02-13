@@ -153,7 +153,7 @@ class ModulesHandler:
                     self.commands_handler.service_messages_handler.add_message(e.message,
                                                                                module_with_unknown_import=mname,
                                                                                module_to_import=mn)
-                print 'Error: module %s requires %s' % (mname, ', '.join(bad_imports))
+                print('Error: module %s requires %s' % (mname, ', '.join(bad_imports)))
             except:
                 res = []
                 exc_type, exc_value, exc_traceback = sys.exc_info()

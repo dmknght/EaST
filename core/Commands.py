@@ -5,12 +5,12 @@ import sys
 import json
 import logging
 import inspect
-import Modules
-import PortScannerMT
-from Modules import ModulesHandler
-from OptionsParser import OptionsParser
-from ReportGenerator import ReportGenerator
-from ServiceMessagesHandler import ServiceMessagesHandler
+from core import Modules
+from core import PortScannerMT
+from core.Modules import ModulesHandler
+from core.OptionsParser import OptionsParser
+from core.ReportGenerator import ReportGenerator
+from core.ServiceMessagesHandler import ServiceMessagesHandler
 from uuid import uuid4
 
 FW_ROOT_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -205,7 +205,7 @@ class Commands(API):
         try:
             proc = subprocess.Popen(['pip', 'install', library_name])
         except Exception as e:
-            print e
+            print(e)
             return self.make_error('Can\'t install module %s' % library_name)
         else:
             proc.communicate()

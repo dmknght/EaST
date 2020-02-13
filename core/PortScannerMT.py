@@ -2,7 +2,8 @@ from __future__ import print_function
 import socket
 import sys
 import threading
-import Queue
+# import Queue
+import queue as Queue
 
 
 class ScannerThread(threading.Thread):
@@ -65,7 +66,7 @@ class Scanner:
         """
         self.resp = []
         if self.from_port>self.to_port:
-            print ("'from port' must be smaller than 'to port'")
+            print("'from port' must be smaller than 'to port'")
             return
         toscan = Queue.Queue()
         scanned = Queue.Queue()

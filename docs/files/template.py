@@ -40,6 +40,6 @@ class exploit(Sploit):
 
 
 if __name__ == '__main__':
-    print "Running exploit %s .. " % INFO['NAME']
+    print("Running exploit %s .. " % INFO['NAME'])
     e = exploit("192.168.0.1", 80)
     e.run()

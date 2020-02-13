@@ -10,20 +10,29 @@ __all__ = ["SimpleHTTPRequestHandler"]
 
 import os
 import posixpath
-import BaseHTTPServer
+# try:
+#     import BaseHTTPServer
+# except ModuleNotFoundError:
+#     from http.server import HTTPServer as BaseHTTPServer
+from http.server import HTTPServer as BaseHTTPServer
+from http.server import BaseHTTPRequestHandler
+from http.server import HTTPServer
 import urllib
 import cgi
 import sys
 import shutil
 import mimetypes
 import threading
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+# try:
+#     from cStringIO import StringIO
+# except ImportError:
+#     #from StringIO import StringIO
+#     from io import StringIO
+from io import StringIO
 
 
-class HTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+# class HTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class HTTPRequestHandler(BaseHTTPRequestHandler):
 
     """Simple HTTP request handler with GET and HEAD commands.
     This serves files from the current directory and any of its
@@ -82,8 +91,11 @@ class HTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             # transmitted *less* than the content-length!
             f = open(path, 'rb')
         except IOError:
-            self.send_error(404, "File not found")
-            return None
+            if path.split("/")[-1] == "favicon.ico":
+                pass
+            else:
+                self.send_error(404, "File not found")
+                return None
         self.send_response(200)
         self.send_header("Content-type", ctype)
         fs = os.fstat(f.fileno())
@@ -105,7 +117,7 @@ class HTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             return None
         list.sort(key=lambda a: a.lower())
         f = StringIO()
-        displaypath = cgi.escape(urllib.unquote(self.path))
+        displaypath = cgi.escape(urllib.parse.unquote(self.path))
         f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
         f.write("<html>\n<title>Directory listing for %s</title>\n" % displaypath)
         f.write("<body>\n<h2>Directory listing for %s</h2>\n" % displaypath)
@@ -141,7 +153,7 @@ class HTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         # abandon query parameters
         path = path.split('?',1)[0]
         path = path.split('#',1)[0]
-        path = posixpath.normpath(urllib.unquote(path))
+        path = posixpath.normpath(urllib.parse.unquote(path))
         words = path.split('/')
         words = filter(None, words)
         path = os.getcwd()
@@ -197,7 +209,7 @@ class HTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 def startHttpServer(HandlerClass = HTTPRequestHandler,
-         ServerClass = BaseHTTPServer.HTTPServer):
+         ServerClass = HTTPServer):
     BaseHTTPServer.test(HandlerClass, ServerClass)
 
 

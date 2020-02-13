@@ -5,8 +5,14 @@ import cookielib
 import urllib2
 import urllib
 import threading
-from BaseHTTPServer import HTTPServer
-from BaseHTTPServer import BaseHTTPRequestHandler
+try:
+    from BaseHTTPServer import HTTPServer
+except ModuleNotFoundError:
+    import http.server as HTTPServer
+try:
+    from BaseHTTPServer import BaseHTTPRequestHandler
+except ModuleNotFoundError:
+    from http.server import BaseHTTPRequestHandler
 
 import shutil
 
@@ -196,7 +202,7 @@ class SimpleWebServer:
             os.makedirs(self.temp_dir)
         except Exception as e:
             self.temp_dir = ""
-            print str(e)
+            print(str(e))
 
     def add_file_for_share(self, filename, content, server_path=''):
         """

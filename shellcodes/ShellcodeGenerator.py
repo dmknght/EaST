@@ -50,7 +50,7 @@ class ShellGenerator:
         self.check_settings(connectback_ip, connectback_port)
         filepath = ''
         if self.use_precompiled:
-            print 'Some utils needed for shellcode compilation are not found. Only precompiled shellcodes can be used.'
+            print('Some utils needed for shellcode compilation are not found. Only precompiled shellcodes can be used.')
         self.use_precompiled = use_precompiled or self.use_precompiled
         ext = '.bin' if self.use_precompiled else '.asm'
         if shellcode_type == Constants.ShellcodeConnection.BIND:
@@ -84,11 +84,11 @@ class ShellGenerator:
             if make_exe:
                 filepath = exe_gen.create_executable()
                 if debug:
-                    print 'Executable trojan is generated: %s' % filepath
+                    print('Executable trojan is generated: %s' % filepath)
             if dll_inj_funcs:
                 filepath = exe_gen.create_executable()
                 if debug:
-                    print 'DLL is generated: %s' % filepath + '.dll'
+                    print('DLL is generated: %s' % filepath + '.dll')
         return shell, filepath
 
     def read_and_replace(self, path, values, use_precompiled):
@@ -193,7 +193,7 @@ class ShellcodeToExe:
 
     def create_x86_dll(self):
         if self.target_arch == Constants.OS_ARCH.X64:
-            print 'Can\'t create dll for x64 arch. Only x86 arch is supported.'
+            print('Can\'t create dll for x64 arch. Only x86 arch is supported.')
             return
         header = '\x4d\x5a\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00\x00\x00\x00\x00' \
                  '\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
@@ -257,7 +257,7 @@ class ShellcodeToExe:
             else:
                 exe_code = self.create_win_x86_exe()
         else:
-            print 'OS %s is not supported' % self.target_os
+            print('OS %s is not supported' % self.target_os)
             return
         self.write_file(exe_code, path + ext)
         return path
@@ -265,7 +265,7 @@ class ShellcodeToExe:
     def write_file(self, data, path):
         with open(path, 'wb') as f:
             f.write(data)
-        print 'File %s is created' % path
+        print('File %s is created' % path)
 
 
 if __name__ == '__main__':

@@ -131,7 +131,7 @@ class Sploit:
             self.send_message(message, inline=inline, replace=replace)
         except Exception as e:
             self.logger.exception(e)
-            print e
+            print(e)
         return
 
     def finish(self, is_successful):

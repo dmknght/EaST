@@ -19,7 +19,7 @@ class JavaShellcodes(Shellcode):
         """ Function to get java(jsp) shellcode """
 
         if not self.CONNECTBACK_IP or not self.CONNECTBACK_PORT:
-            print "Settings for connectback listener must be defined"
+            print("Settings for connectback listener must be defined")
             return False
 
         javacode = ""

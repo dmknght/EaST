@@ -361,13 +361,13 @@ class CodeEncoders:
         elif encoder_type == Constants.EncoderType.JUMPCALL_XOR:
             encoded_shellcode = self.jumpcall_encoder(_byte_array, debug)
         else:
-            print "There no encoder of this type"
+            print("There no encoder of this type")
             return None
         return encoded_shellcode
 
     def clean_bad_chars(self, orig_array, payload):
         if not self.BADCHARS:
-            print "You must specify some params"
+            print("You must specify some params")
             return None
         for k in self.BADCHARS:
             # Ooops, BadChar found :( Do XOR stuff again with a new random value
@@ -582,7 +582,7 @@ call_decoder:
         shellcode = _byte_array
         encoded_shell = encoder.encode_to_string(shellcode)
         if debug:
-            print "Len of encoded shellcode:", len(encoded_shell)
+            print("Len of encoded shellcode:", len(encoded_shell))
         return encoded_shell
 
     def jumpcall_encoder(self, _byte_array, debug):
@@ -590,7 +590,7 @@ call_decoder:
         shellcode = _byte_array
         encoded_shell = encoder.encode_to_string(shellcode)
         if debug:
-            print "Len of encoded shellcode:", len(encoded_shell)
+            print("Len of encoded shellcode:", len(encoded_shell))
         return encoded_shell
 
     def alphanum_encoder(self, byte_str, debug=0, buffer_register='ecx'):
@@ -598,7 +598,7 @@ call_decoder:
         encoded_shell = encoder.encode(byte_str)
         if debug:
             print("Length of encoded shellcode: %s" % len(encoded_shell))
-            print ''.join("\\x%02x"%ord(c) for c in encoded_shell)
+            print(''.join("\\x%02x"%ord(c) for c in encoded_shell))
         return encoded_shell
 
 

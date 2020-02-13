@@ -33,7 +33,7 @@ class ShellGenerator:
             code = self.target.message(message)
         elif type == "reverse":
             if not connectback_ip or not connectback_port:
-                print "You must specify connectback params"
+                print("You must specify connectback params")
                 return None
             code = self.target.reverse(connectback_ip, connectback_port)
         elif type == "command":
@@ -95,7 +95,7 @@ one:
             code = code.replace("OS_TARGET_ARCH", "64")
             code = code.replace("ecx", "rcx")
         else:
-            print "Format: %s is not supported" % self.OS_TARGET_ARCH
+            print("Format: %s is not supported" % self.OS_TARGET_ARCH)
             return
 
         code = code.replace("MESSAGE", message)
@@ -123,7 +123,7 @@ one:
         # ) = -1 EINPROGRESS (Operation now in progress)
 
         if not connectback_ip or not connectback_port:
-            print "You must specify some params"
+            print("You must specify some params")
             return None
 
         code = ""
@@ -412,7 +412,7 @@ exec_shell:
             connectback_port_hex += '{:04X}'.format(connectback_port)[:-2]
 
         else:
-            print "Format: %s is not supported" % self.OS_TARGET_ARCH
+            print("Format: %s is not supported" % self.OS_TARGET_ARCH)
             return
 
         code = code.replace("CONNECTBACK_IP", connectback_ip_hex)

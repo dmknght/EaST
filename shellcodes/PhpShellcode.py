@@ -20,7 +20,7 @@ class PhpShellcodes(Shellcode):
         """ Function to get php shellcode """
 
         if not localhost or not localport:
-            print "Settings for connectback listener must be defined"
+            print("Settings for connectback listener must be defined")
             return False
 
         phpcode = ""

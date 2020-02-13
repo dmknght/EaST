@@ -1,14 +1,16 @@
 # -*- coding: UTF-8 -*-
-import Queue
+import queue as Queue
 import asyncore
 import errno
 import json
 import logging
 import struct
-from StringIO import StringIO
+# from StringIO import StringIO
+from io import StringIO
 from base64 import b64encode
 from hashlib import sha1
-from mimetools import Message
+# from mimetools import Message
+from email import message_from_string
 import os
 import signal
 import socket
@@ -16,7 +18,7 @@ from threading import Thread
 
 import sys
 
-from Commands import Commands
+from core.Commands import Commands
 
 FIN = 0x80
 OPCODE = 0x0f
@@ -142,24 +144,31 @@ class WebsocketHandler(asyncore.dispatcher):
     def handle_read(self):
         """Read an incoming message from the client"""
         if not self.handshake_done:
-            self.handshake()
+            import traceback
+            try:
+                self.handshake()
+            except:
+                traceback.print_exc()
         elif self.valid_client:
             self.read_next_message()
 
     def handshake(self):
         data = self.recv(1024).strip()
-        new_data = data.split('\r\n', 1)
+        new_data = str(data).split('\r\n', 1)
         if not new_data:
             return
-        headers = Message(StringIO(data.split('\r\n', 1)[1]))
+        # headers = Message(StringIO(data.split('\r\n', 1)[1]))
+        # https://stackoverflow.com/a/56809741
+        headers = message_from_string(str(data, 'ASCII').split('\r\n', 1)[1])
         if headers.get("Upgrade", None).lower() == "websocket":
             key = headers['Sec-WebSocket-Key']
-            digest = b64encode(sha1(key + self.magic).hexdigest().decode('hex'))
+            digest = b64encode(sha1(key.encode('utf-8') + self.magic.encode('utf-8')).hexdigest().encode('utf-8'))
             response = 'HTTP/1.1 101 Switching Protocols\r\n'
+            response += 'Server: East Framework Server\r\n'
             response += 'Upgrade: websocket\r\n'
             response += 'Connection: Upgrade\r\n'
             response += 'Sec-WebSocket-Accept: %s\r\n\r\n' % digest
-            self.send(response)
+            self.send(response.encode('utf-8'))
             self.handshake_done = True
             self.valid_client = True
 
@@ -184,7 +193,7 @@ class WebsocketHandler(asyncore.dispatcher):
                 if not data:
                     break
                 buffer.append(data)
-            except socket.error, e:
+            except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
                     #  There is no data
@@ -276,7 +285,7 @@ def parse_json(message):
         return None
     try:
         data = json.loads(message)
-    except Exception, e:
+    except Exception as e:
         print(e)
         logging.getLogger(__name__).exception(e)
         return None
@@ -288,7 +297,7 @@ def json_encode(message):
         return message
     try:
         data = json.dumps(message)
-    except Exception, e:
+    except Exception as e:
         print(e)
         logging.getLogger(__name__).exception(e)
         return None

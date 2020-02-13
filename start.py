@@ -1,7 +1,14 @@
-﻿import os, sys
+﻿#!/usr/bin/python3
+
+import os, sys
 import threading
 import logging
-import BaseHTTPServer
+# try:
+#     import BaseHTTPServer
+# except ModuleNotFoundError:
+#     from http.server import HTTPServer as BaseHTTPServer
+from http.server import HTTPServer as BaseHTTPServer
+from http.server import HTTPServer
 from ui.httpd import HTTPRequestHandler
 import subprocess
 import zipfile
@@ -52,7 +59,7 @@ class FrameworkStarter:
         core = os.path.join(root_dir, "core")
         shellcodes = os.path.join(root_dir, "shellcodes")
         paths = [root_dir, core, shellcodes]
-        os.environ.data["PYTHONPATH"] = ";".join(paths) if self.platform == "win" else ":".join(paths)
+        os.environ["PYTHONPATH"] = ";".join(paths) if self.platform == "win" else ":".join(paths)
 
     def install_missing_deps(self):
         """
@@ -107,7 +114,8 @@ class FrameworkStarter:
     def start_servers(self):
         print("Starting servers...")
         ws_server = WebSocketServer(self.host, self.ws_port, 2000)
-        http_server = BaseHTTPServer.HTTPServer((self.host, self.port), HTTPRequestHandler)
+        # http_server = BaseHTTPServer.HTTPServer((self.host, self.port), HTTPRequestHandler)
+        http_server = HTTPServer((self.host, self.port), HTTPRequestHandler)
         th2 = threading.Thread(target=http_server.serve_forever)
         threads = [th2]
         for t in threads:
