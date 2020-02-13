@@ -145,10 +145,7 @@ class WebsocketHandler(asyncore.dispatcher):
         """Read an incoming message from the client"""
         if not self.handshake_done:
             import traceback
-            try:
-                self.handshake()
-            except:
-                traceback.print_exc()
+            self.handshake()
         elif self.valid_client:
             self.read_next_message()
 
@@ -164,7 +161,6 @@ class WebsocketHandler(asyncore.dispatcher):
             key = headers['Sec-WebSocket-Key']
             digest = b64encode(sha1(key.encode('utf-8') + self.magic.encode('utf-8')).hexdigest().encode('utf-8'))
             response = 'HTTP/1.1 101 Switching Protocols\r\n'
-            response += 'Server: East Framework Server\r\n'
             response += 'Upgrade: websocket\r\n'
             response += 'Connection: Upgrade\r\n'
             response += 'Sec-WebSocket-Accept: %s\r\n\r\n' % digest
