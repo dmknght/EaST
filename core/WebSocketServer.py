@@ -144,7 +144,6 @@ class WebsocketHandler(asyncore.dispatcher):
     def handle_read(self):
         """Read an incoming message from the client"""
         if not self.handshake_done:
-            import traceback
             self.handshake()
         elif self.valid_client:
             self.read_next_message()
@@ -163,7 +162,7 @@ class WebsocketHandler(asyncore.dispatcher):
             response = 'HTTP/1.1 101 Switching Protocols\r\n'
             response += 'Upgrade: websocket\r\n'
             response += 'Connection: Upgrade\r\n'
-            response += 'Sec-WebSocket-Accept: %s\r\n\r\n' % digest
+            response += 'Sec-WebSocket-Accept: %s\r\n\r\n' % digest.decode('utf-8')
             self.send(response.encode('utf-8'))
             self.handshake_done = True
             self.valid_client = True
